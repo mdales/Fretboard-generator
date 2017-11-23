@@ -16,12 +16,8 @@ Most fret wire have a tang width of 0.5mm, so using a 0.3mm fret saw means that 
 
 The rough workflow I've used successfully is:
 
-1: Take the fretboard wood, and laser on the fret groves - the bounding box and dot inlays are in the DXF file for reference, but I do not cut or etch them.
-
-2: There is a marker for the 0th and 12th Fret, etch those also, and use it to line up with your neck piece.
-
-3: Glue the etched fretboard to your neck.
-
-4: Before radiusing, use your dozuki saw to cut the fret slots, remembering that as you radius the board you will lose wood at the edge.
-
-5: Hammer in the frets without using glue.
+1. Take the fretboard wood, and laser on the fret groves - the bounding box and dot inlays are in the DXF file for reference, but I do not cut or etch them.
+1. There is a marker for the 0th and 12th Fret, etch those also, and use it to line up with your neck piece.
+1. Glue the etched fretboard to your neck.
+1. Before radiusing, use your dozuki saw to cut the fret slots, remembering that as you radius the board you will lose wood at the edge.
+1. Hammer in the frets without using glue.
