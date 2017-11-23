@@ -3,7 +3,7 @@ What is this?
 
 This is a template designed to let you use a laser cutter to etch fret slot grooves to then be sawn for a 21 fret, 25.5" scale length fretboard. The nut width is 3.5mm.
 
-![Freboard](fretboard.png)
+![Freboard](Fretboard.png)
 
 It is provided free to use under the Creative Commons 4.0 ShareAlike license, copyright Michael Dales 2017.
 
