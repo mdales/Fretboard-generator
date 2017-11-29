@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Fretboard template generator</title>
+	<link rel="stylesheet" href="fretboard-generator.css">
+	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="jcanvas.min.js"></script>
+	<script type="text/javascript" src="fretboard-generator.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1>Fretboard Template Generator</h1>
+	</div>
+
+	<div id="entry">
+		<formz>
+			<table>
+				<tr>
+					<td>Scale Length:</td>
+					<td>
+						<input type="number" value="25.5" min="1.0" step="any" name="scale"/>
+						<select name="scale_units">
+							<option value="inches">Inches</option>
+							<option value="mm">mm</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Fret Count:</td>
+					<td><input type="number" value="21" min="1" name="frets"/></td>
+				</tr>
+				<tr>
+					<td>Nut slot width:</td>
+					<td>
+						<input type="number" value="3.5" min="0.0" step="any" name="nut"/>
+						<select name="nut_units">
+							<option value="mm">mm</option>
+							<option value="inches">Inches</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Inlay diameter:</td>
+					<td>
+						<input type="number" value="6" min="0.125" step="any" name="inlay"/>
+						<select name="inlay_units">
+							<option value="mm">mm</option>
+							<option value="inches">Inches</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><button>Generate</button></td>
+				</tr>
+			</table>
+		</formz>
+	</div>
+
+	<div id="draw">
+		<p>Rough preview:</p>
+		<canvas id="fretboardcanvas" width="1400px" height="350px"></canvas>
+	</div>
+
+	<div id="footer">
+	</dev>
+
+</body>
+</html>
