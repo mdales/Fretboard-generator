@@ -3,9 +3,11 @@ h1 {
 }
 
 svg {
-	padding: 20px;
+	padding: 20px 20px 20px 20px;
 	background: #2e75c4;
     overflow: visible;
+    width: 95%;
+    align: center;
 }
 
 svg line, svg circle, svg path {
