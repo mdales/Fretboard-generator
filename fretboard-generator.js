@@ -1,6 +1,6 @@
 // Fretboard generator
 //
-// Copyright 2017 Digital Flapjack Ltd
+// Copyright 2017 Michael Dales
 //
 // Released under the GPLv3
 
@@ -35,10 +35,10 @@ function generateFretboard() {
     var inlayUnits = $("select[name=\"inlay_units\"]").val()
     var slotStyle = $("select[name=\"slot_style\"]").val()
     
-    var height = 75.0;
-    var x_offset = 0.0;
-    var y_offset = 0.0;
-    var slotWidth = 0.5;
+    const height = 75.0;
+    const x_offset = 0.0;
+    const y_offset = 0.0;
+    const slotWidth = 0.5;
     
     // internally do everything in mm
     if (scaleUnits == "inches") {
