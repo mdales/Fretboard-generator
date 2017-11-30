@@ -26,14 +26,15 @@ function generateFretPositions(scaleLength, frets) {
  */
 function generateFretboard() {
 
-    var scaleLength = $("input[name=\"scale\"]").val()
-    var scaleUnits = $("select[name=\"scale_units\"]").val()
-    var frets = $("input[name=\"frets\"]").val()
-    var nutWidth = $("input[name=\"nut\"]").val()
-    var nutUnits = $("select[name=\"nut_units\"]").val()
-    var inlayWidth = $("input[name=\"inlay\"]").val()
-    var inlayUnits = $("select[name=\"inlay_units\"]").val()
-    var slotStyle = $("select[name=\"slot_style\"]").val()
+    var scaleLength = $("input[name=\"scale\"]").val();
+    var scaleUnits = $("select[name=\"scale_units\"]").val();
+    var frets = $("input[name=\"frets\"]").val();
+    var nutWidth = $("input[name=\"nut\"]").val();
+    var nutUnits = $("select[name=\"nut_units\"]").val();
+    var inlayWidth = $("input[name=\"inlay\"]").val();
+    var inlayUnits = $("select[name=\"inlay_units\"]").val();
+    var slotStyle = $("select[name=\"slot_style\"]").val();
+    var alignmentMarkers = $("input[name=\"alignment_markers\"]").is(":checked");
     
     const height = 75.0;
     const x_offset = 0.0;
@@ -78,6 +79,14 @@ function generateFretboard() {
 			var r = new makerjs.models.Rectangle(slotWidth, height);
  			r.origin = [pos - (slotWidth / 2.0), y_offset];
 			models.push(r);
+		}
+		
+		// alignment markers
+		if (alignmentMarkers && (i % 12 == 0)) {
+			var t = new makerjs.paths.Line([pos, y_offset - 12.0], [pos, y_offset - 2.0])
+			paths.push(t);
+			var b = new makerjs.paths.Line([pos, y_offset + height + 2.0], [pos, y_offset + height + 12.0])
+			paths.push(b);
 		}
          
         // Do the inlay markers next in a traditional style   
