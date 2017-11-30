@@ -2,6 +2,13 @@ table td {
 	align: center;
 }
 
-canvas {
-	background: white;
+svg {
+	padding: 20px;
+	background: #2e75c4;
+    overflow: visible;
+}
+
+svg line, svg circle, svg path {
+    stroke: #fff;
+    fill: none;
 }

@@ -5,7 +5,8 @@
 	<title>Fretboard template generator</title>
 	<link rel="stylesheet" href="fretboard-generator.css">
 	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="jcanvas.min.js"></script>
+	<script type="text/javascript" src="download.js"></script>
+	<script src="http://maker.js.org/target/js/browser.maker.js" type="text/javascript"></script>
 	<script type="text/javascript" src="fretboard-generator.js"></script>
 </head>
 <body>
@@ -52,15 +53,25 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><button>Generate</button></td>
+					<td>Fret scoring:</td>
+					<td>
+						<select name="slot_style">
+							<option value="slot">Slots (for laser etching)</option>
+							<option value="line">Lines (for CNC routing)</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><button id="svg">Generate SVG</button></td>
+					<td><button id="dxf">Generate DXF</button></td>
 				</tr>
 			</table>
 		</formz>
 	</div>
 
 	<div id="draw">
-		<p>Rough preview:</p>
-		<canvas id="fretboardcanvas" width="1400px" height="350px"></canvas>
+		<p>Blueprint:</p>
+		<div id="fretboard"></div>
 	</div>
 
 	<div id="footer">
