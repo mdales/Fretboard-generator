@@ -139,7 +139,14 @@ function drawFretboard() {
  */
 function saveSVGFretboard() {
 	var model = generateFretboard();    
-	var svg = makerjs.exporter.toSVG(model);
+	var renderOptions = {
+		svgAttrs: {
+			"xmlns": "http://www.w3.org/2000/svg",
+			"xmlns:xlink": "http://www.w3.org/1999/xlink"
+		},
+		units: model.units,
+	};
+	var svg = makerjs.exporter.toSVG(model, renderOptions);
 	download(svg, "fretboard.svg", "image/svg+xml")
 }
 
