@@ -73,6 +73,7 @@ function generateFretboard() {
     var inlayUnits = $("select[name=\"inlay_units\"]").val();
     var slotStyle = $("select[name=\"slot_style\"]").val();
     var alignmentMarkers = $("input[name=\"alignment_markers\"]").is(":checked");
+    var orientation = $("select[name=\"orientation\"]").val();
     
     const height = 75.0;
     const x_offset = 0.0;
@@ -150,11 +151,17 @@ function generateFretboard() {
         }
     }
     
-    return {
+    model = {
     	paths: paths,
     	models: models,
     	units: makerjs.unitType.Millimeter
     };
+    
+    if (orientation == "portrait") {
+    	makerjs.model.rotate(model, -90, [0, 0]);
+    }
+    
+    return model;
 }
 
 /**
