@@ -20,16 +20,14 @@ function generateFretPositions(scaleLength, frets) {
     return positions;
 }
 
-function fillPositionTable() {
-    var scaleLength = $("input[name=\"scale\"]").val();
-    var scaleUnits = $("select[name=\"scale_units\"]").val();
-    var positionUnits = $("select[name=\"position_units\"]").val();
-    var frets = $("input[name=\"frets\"]").val();
-    if (scaleUnits == "inches") {
-        scaleLength *= 25.4;
-    }
-    var positions = generateFretPositions(scaleLength, frets);
-    if (positionUnits == "inches") {
+/**
+ * Fills the table on the page with the actual fret positions.
+ * @param {Object} params - All the page inputs.
+ */
+function fillPositionTable(params) {
+
+    var positions = generateFretPositions(params.scaleLength, params.frets);
+    if (params.positionUnits == "inches") {
     	for (i = 0; i < positions.length; i++) {
     		positions[i] = positions[i] / 25.4;
     	}
@@ -45,7 +43,7 @@ function fillPositionTable() {
     	var rowhtml = "<tr>";
 		for (i = 0; i < tableWidth; i++) {
 			fret = (j * tableWidth) + i;
-			if (fret < frets) {
+			if (fret < params.frets) {
 				rowhtml += "<td>" + (fret + 1) + "</td><td>" + positions[fret].toFixed(3) + "</td>";
 			} else {
 				rowhtml += "<td></td><td></td>";
@@ -59,50 +57,62 @@ function fillPositionTable() {
 }
 
 /**
+ * Gets the user input from the input elements in the HTML
+ * @return {Object} An object with all the parameters
+ */
+function getParameters() {
+	var params = {
+    	scaleLength: $("input[name=\"scale\"]").val(),
+     	scaleUnits: $("select[name=\"scale_units\"]").val(),
+    	frets: $("input[name=\"frets\"]").val(),
+    	nutWidth: $("input[name=\"nut\"]").val(),
+    	nutUnits: $("select[name=\"nut_units\"]").val(),
+    	inlayWidth: $("input[name=\"inlay\"]").val(),
+    	inlayUnits: $("select[name=\"inlay_units\"]").val(),
+    	slotStyle: $("select[name=\"slot_style\"]").val(),
+    	alignmentMarkers: $("input[name=\"alignment_markers\"]").is(":checked"),
+    	orientation: $("select[name=\"orientation\"]").val(),
+    	positionUnits: $("select[name=\"position_units\"]").val()
+	};
+	
+    // internally do everything in mm
+    if (params.scaleUnits == "inches") {
+        params.scaleLength *= 25.4;
+    }
+    if (params.nutUnits == "inches") {
+        params.nutWidth *= 25.4;
+    }
+    if (params.inlayUnits == "inches") {
+        params.inlayWidth *= 25.4;
+    }
+    
+    return params;
+}
+
+/**
  * Returns the model for a fretboard in mm
+ * @param {Object} params - An object with all the form params. 
  * @return {Model} A Model object.
  */
-function generateFretboard() {
-
-    var scaleLength = $("input[name=\"scale\"]").val();
-    var scaleUnits = $("select[name=\"scale_units\"]").val();
-    var frets = $("input[name=\"frets\"]").val();
-    var nutWidth = $("input[name=\"nut\"]").val();
-    var nutUnits = $("select[name=\"nut_units\"]").val();
-    var inlayWidth = $("input[name=\"inlay\"]").val();
-    var inlayUnits = $("select[name=\"inlay_units\"]").val();
-    var slotStyle = $("select[name=\"slot_style\"]").val();
-    var alignmentMarkers = $("input[name=\"alignment_markers\"]").is(":checked");
-    var orientation = $("select[name=\"orientation\"]").val();
+function generateFretboard(params) {
     
     const height = 75.0;
     const x_offset = 0.0;
     const y_offset = 0.0;
     const slotWidth = 0.5;
     
-    // internally do everything in mm
-    if (scaleUnits == "inches") {
-        scaleLength *= 25.4;
-    }
-    if (nutUnits == "inches") {
-        nutWidth *= 25.4;
-    }
-    if (inlayUnits == "inches") {
-        inlayWidth *= 25.4;
-    }
-    
-    var positions = generateFretPositions(scaleLength, frets);
+    var positions = generateFretPositions(params.scaleLength, params.frets);
 
 	var paths = [];
 	var models = []
 
     // draw the nut far side
-	if (slotStyle == "line") {
-		var l = new makerjs.paths.Line([x_offset - nutWidth, y_offset], [x_offset - nutWidth, y_offset + height]);
+	if (params.slotStyle == "line") {
+		var l = new makerjs.paths.Line([x_offset - params.nutWidth, y_offset], [x_offset - params.nutWidth, y_offset + height]);
 		paths.push(l);
 	} else {
 		var r = new makerjs.models.Rectangle(slotWidth, height);
-		r.origin = [(x_offset - nutWidth) - (slotWidth / 2.0), y_offset];
+		r.origin = [(x_offset - params.nutWidth) - (slotWidth / 2.0), y_offset];
 		models.push(r);
 	}
 	
@@ -111,7 +121,7 @@ function generateFretboard() {
         var pos = x_offset + positions[i];
     
     	// The fret itself
-    	if (slotStyle == "line") {
+    	if (params.slotStyle == "line") {
 			var l = new makerjs.paths.Line([pos, y_offset], [pos, y_offset + height]);
 			paths.push(l);
 		} else {
@@ -119,9 +129,10 @@ function generateFretboard() {
  			r.origin = [pos - (slotWidth / 2.0), y_offset];
 			models.push(r);
 		}
+	
 		
 		// alignment markers
-		if (alignmentMarkers && (i % 12 == 0)) {
+		if (params.alignmentMarkers && (i % 12 == 0)) {
 			var t = new makerjs.paths.Line([pos, y_offset - 12.0], [pos, y_offset - 2.0])
 			paths.push(t);
 			var b = new makerjs.paths.Line([pos, y_offset + height + 2.0], [pos, y_offset + height + 12.0])
@@ -136,16 +147,16 @@ function generateFretboard() {
         switch (fretNumber) {
 		case 3: case 5: case 7: case 9:
 			var c = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 2.0)], 
-				inlayWidth / 2.0);
+				params.inlayWidth / 2.0);
 			paths.push(c);
 			break;
 			
 		case 0:
 			var c1 = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 4.0)],
-				inlayWidth / 2.0);
+				params.inlayWidth / 2.0);
 			paths.push(c1);
 			var c2 = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height * 3.0 / 4.0)],
-				inlayWidth / 2.0);
+				params.inlayWidth / 2.0);
 			paths.push(c2);
 			break;
         }
@@ -157,7 +168,7 @@ function generateFretboard() {
     	units: makerjs.unitType.Millimeter
     };
     
-    if (orientation == "portrait") {
+    if (params.orientation == "portrait") {
     	makerjs.model.rotate(model, -90, [0, 0]);
     }
     
@@ -169,7 +180,8 @@ function generateFretboard() {
  */
 function drawFretboard() {
 
-	var model = generateFretboard();    
+	var params = getParameters();
+	var model = generateFretboard(params);    
 	var renderOptions = {
 		svgAttrs: {
 			"id": 'drawing',
@@ -187,7 +199,7 @@ function drawFretboard() {
 	var svg = makerjs.exporter.toSVG(model, renderOptions);
 	$("div#fretboard").html(svg);
 	
-	fillPositionTable();
+	fillPositionTable(params);
 }
 
 /**
