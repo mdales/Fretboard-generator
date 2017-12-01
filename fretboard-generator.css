@@ -28,3 +28,39 @@ button {
 	padding: 5px;
 	font-size: 12pt;
 }
+
+table#positions {
+	border-spacing: 0px;
+	width:90%;
+	font-family: Helvetica, Arial, sans-serif; 
+}
+
+table#positions th {
+/* 	text-align: left; */
+}
+
+table#position td {
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+table#positions col:nth-child(2n+1) {
+	background: #fff;
+}
+table#positions td {
+	text-align: center;
+}
+
+
+div#wrapper {
+	display: flex;
+}
+
+div#entry {
+	flex: 0 0 50%;
+}
+
+div#positions {
+	flex: 1;
+}

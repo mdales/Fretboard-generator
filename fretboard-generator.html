@@ -17,62 +17,88 @@
 	
 	<p>For details on how to use this, see the details <a href="https://github.com/mdales/Fretboard-etching">here</a>.<p>
 
-	<div id="entry">
-		<table>
-			<tr>
-				<td>Scale Length:</td>
-				<td>
-					<input type="number" value="25.5" min="1.0" step="any" name="scale"/>
-					<select name="scale_units">
-						<option value="inches">Inches</option>
-						<option value="mm">mm</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Fret Count:</td>
-				<td><input type="number" value="21" min="1" name="frets"/></td>
-			</tr>
-			<tr>
-				<td>Nut slot width:</td>
-				<td>
-					<input type="number" value="3.5" min="0.0" step="any" name="nut"/>
-					<select name="nut_units">
-						<option value="mm">mm</option>
-						<option value="inches">Inches</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Inlay diameter:</td>
-				<td>
-					<input type="number" value="6" min="0.125" step="any" name="inlay"/>
-					<select name="inlay_units">
-						<option value="mm">mm</option>
-						<option value="inches">Inches</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Fret scoring:</td>
-				<td>
-					<select name="slot_style">
-						<option value="slot">Slots (for laser etching)</option>
-						<option value="line">Lines (for CNC routing)</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Fret alignment markers:</td>
-				<td>
-					<input type="checkbox" name="alignment_markers" value="mark"></input?
-				</td>
-			</tr>
-			<tr>
-				<td><button id="svg">Generate SVG</button></td>
-				<td><button id="dxf">Generate DXF</button></td>
-			</tr>
-		</table>
+	<div id="wrapper">
+
+		<div id="entry">
+			<table>
+				<tr>
+					<td>Scale Length:</td>
+					<td>
+						<input type="number" value="25.5" min="1.0" step="any" name="scale"/>
+						<select name="scale_units">
+							<option value="inches">Inches</option>
+							<option value="mm">mm</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Fret Count:</td>
+					<td><input type="number" value="21" min="1" name="frets"/></td>
+				</tr>
+				<tr>
+					<td>Nut slot width:</td>
+					<td>
+						<input type="number" value="3.5" min="0.0" step="any" name="nut"/>
+						<select name="nut_units">
+							<option value="mm">mm</option>
+							<option value="inches">Inches</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Inlay diameter:</td>
+					<td>
+						<input type="number" value="6" min="0.125" step="any" name="inlay"/>
+						<select name="inlay_units">
+							<option value="mm">mm</option>
+							<option value="inches">Inches</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Fret scoring:</td>
+					<td>
+						<select name="slot_style">
+							<option value="slot">Slots (for laser etching)</option>
+							<option value="line">Lines (for CNC routing)</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Fret alignment markers:</td>
+					<td>
+						<input type="checkbox" name="alignment_markers" value="mark"></input?
+					</td>
+				</tr>
+				<tr>
+					<td><button id="svg">Generate SVG</button></td>
+					<td><button id="dxf">Generate DXF</button></td>
+				</tr>
+			</table>
+		</div>
+	
+		<div id="positions">
+			<table id="positions">
+				<col><col><col><col><col><col><col><col>
+				<thead>
+					<th>Fret</th>
+					<th>Offset</th>
+					<th>Fret</th>
+					<th>Offset</th>
+					<th>Fret</th>
+					<th>Offset</th>
+					<th>Fret</th>
+					<th>Offset</th>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<p>Positions: 
+				<select name="position_units">
+					<option value="mm">Display in mm</option>
+					<option value="inches">Display in inches</option>
+				</select>
+			</p>
+		</div>
 	</div>
 
 	<div id="draw">

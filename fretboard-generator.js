@@ -20,6 +20,44 @@ function generateFretPositions(scaleLength, frets) {
     return positions;
 }
 
+function fillPositionTable() {
+    var scaleLength = $("input[name=\"scale\"]").val();
+    var scaleUnits = $("select[name=\"scale_units\"]").val();
+    var positionUnits = $("select[name=\"position_units\"]").val();
+    var frets = $("input[name=\"frets\"]").val();
+    if (scaleUnits == "inches") {
+        scaleLength *= 25.4;
+    }
+    var positions = generateFretPositions(scaleLength, frets);
+    if (positionUnits == "inches") {
+    	for (i = 0; i < positions.length; i++) {
+    		positions[i] = positions[i] / 25.4;
+    	}
+    }
+    
+    const tableWidth = 4;
+    var tablehtml = "";
+    
+    // we don't care about fret 0 being at 0, so kill it and adjust when displaying
+    positions = positions.slice(1);
+    
+    for (j = 0; j < positions.length / tableWidth; j++) {
+    	var rowhtml = "<tr>";
+		for (i = 0; i < tableWidth; i++) {
+			fret = (j * tableWidth) + i;
+			if (fret < frets) {
+				rowhtml += "<td>" + (fret + 1) + "</td><td>" + positions[fret].toFixed(3) + "</td>";
+			} else {
+				rowhtml += "<td></td><td></td>";
+			}
+		}
+		rowhtml += "</tr>\n";
+		tablehtml += rowhtml;
+	}
+	
+	$("table#positions tbody").html(tablehtml);
+}
+
 /**
  * Returns the model for a fretboard in mm
  * @return {Model} A Model object.
@@ -141,6 +179,8 @@ function drawFretboard() {
 
 	var svg = makerjs.exporter.toSVG(model, renderOptions);
 	$("div#fretboard").html(svg);
+	
+	fillPositionTable();
 }
 
 /**
