@@ -32,13 +32,13 @@ function fillPositionTable(params) {
     		positions[i] = positions[i] / 25.4;
     	}
     }
-    
+
     const tableWidth = 4;
     var tablehtml = "";
-    
+
     // we don't care about fret 0 being at 0, so kill it and adjust when displaying
     positions = positions.slice(1);
-    
+
     for (j = 0; j < positions.length / tableWidth; j++) {
     	var rowhtml = "<tr>";
 		for (i = 0; i < tableWidth; i++) {
@@ -52,7 +52,7 @@ function fillPositionTable(params) {
 		rowhtml += "</tr>\n";
 		tablehtml += rowhtml;
 	}
-	
+
 	$("table#positions tbody").html(tablehtml);
 }
 
@@ -74,7 +74,7 @@ function getParameters() {
     	orientation: $("select[name=\"orientation\"]").val(),
     	positionUnits: $("select[name=\"position_units\"]").val()
 	};
-	
+
     // internally do everything in mm
     if (params.scaleUnits == "inches") {
         params.scaleLength *= 25.4;
@@ -85,22 +85,22 @@ function getParameters() {
     if (params.inlayUnits == "inches") {
         params.inlayWidth *= 25.4;
     }
-    
+
     return params;
 }
 
 /**
  * Returns the model for a fretboard in mm
- * @param {Object} params - An object with all the form params. 
+ * @param {Object} params - An object with all the form params.
  * @return {Model} A Model object.
  */
 function generateFretboard(params) {
-    
+
     const height = 75.0;
     const x_offset = 0.0;
     const y_offset = 0.0;
     const slotWidth = 0.5;
-    
+
     var positions = generateFretPositions(params.scaleLength, params.frets);
 
 	var paths = [];
@@ -115,11 +115,11 @@ function generateFretboard(params) {
 		r.origin = [(x_offset - params.nutWidth) - (slotWidth / 2.0), y_offset];
 		models.push(r);
 	}
-	
+
     // draw the frets
     for (i = 0; i < positions.length; i++) {
         var pos = x_offset + positions[i];
-    
+
     	// The fret itself
     	if (params.slotStyle == "line") {
 			var l = new makerjs.paths.Line([pos, y_offset], [pos, y_offset + height]);
@@ -129,8 +129,8 @@ function generateFretboard(params) {
  			r.origin = [pos - (slotWidth / 2.0), y_offset];
 			models.push(r);
 		}
-	
-		
+
+
 		// alignment markers
 		if (params.alignmentMarkers && (i % 12 == 0)) {
 			var t = new makerjs.paths.Line([pos, y_offset - 12.0], [pos, y_offset - 2.0])
@@ -138,19 +138,19 @@ function generateFretboard(params) {
 			var b = new makerjs.paths.Line([pos, y_offset + height + 2.0], [pos, y_offset + height + 12.0])
 			paths.push(b);
 		}
-         
-        // Do the inlay markers next in a traditional style   
+
+        // Do the inlay markers next in a traditional style
 		if (i == 0) {
 			continue;
 		}
         var fretNumber = (i % 12);
         switch (fretNumber) {
 		case 3: case 5: case 7: case 9:
-			var c = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 2.0)], 
+			var c = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 2.0)],
 				params.inlayWidth / 2.0);
 			paths.push(c);
 			break;
-			
+
 		case 0:
 			var c1 = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 4.0)],
 				params.inlayWidth / 2.0);
@@ -161,17 +161,17 @@ function generateFretboard(params) {
 			break;
         }
     }
-    
+
     model = {
     	paths: paths,
     	models: models,
     	units: makerjs.unitType.Millimeter
     };
-    
+
     if (params.orientation == "portrait") {
     	makerjs.model.rotate(model, -90, [0, 0]);
     }
-    
+
     return model;
 }
 
@@ -181,7 +181,7 @@ function generateFretboard(params) {
 function drawFretboard() {
 
 	var params = getParameters();
-	var model = generateFretboard(params);    
+	var model = generateFretboard(params);
 	var renderOptions = {
 		svgAttrs: {
 			"id": 'drawing',
@@ -198,7 +198,7 @@ function drawFretboard() {
 
 	var svg = makerjs.exporter.toSVG(model, renderOptions);
 	$("div#fretboard").html(svg);
-	
+
 	fillPositionTable(params);
 }
 
@@ -206,7 +206,8 @@ function drawFretboard() {
  * Call this to cause a download of an SVG version.
  */
 function saveSVGFretboard() {
-	var model = generateFretboard();    
+	var params = getParameters();
+	var model = generateFretboard(params);
 	var renderOptions = {
 		svgAttrs: {
 			"xmlns": "http://www.w3.org/2000/svg",
@@ -222,18 +223,19 @@ function saveSVGFretboard() {
  * Call this to cause a download of the DXF version.
  */
 function saveDXFFretboard() {
-	var model = generateFretboard();    
-	var dxf = makerjs.exporter.toDXF(model);
+	var params = getParameters();
+	var model = generateFretboard(params);
+	var dxf = makerjs.exporter.toDXF(model, {usePOLYLINE: true});
 	download(dxf, "fretboard.dxf", "application/dxf")
 }
 
 $(document).ready(function() {
     $("input").change(drawFretboard);
     $("select").change(drawFretboard);
-    
+
     $("button#svg").click(saveSVGFretboard);
     $("button#dxf").click(saveDXFFretboard);
-    
+
     drawFretboard();
 });
 
