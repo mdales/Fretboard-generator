@@ -69,6 +69,7 @@ function getParameters() {
     	nutUnits: $("select[name=\"nut_units\"]").val(),
     	inlayWidth: $("input[name=\"inlay\"]").val(),
     	inlayUnits: $("select[name=\"inlay_units\"]").val(),
+    	inlayStyle: $("select[name=\"inlay_style\"]").val(),
     	slotStyle: $("select[name=\"slot_style\"]").val(),
     	alignmentMarkers: $("input[name=\"alignment_markers\"]").is(":checked"),
     	orientation: $("select[name=\"orientation\"]").val(),
@@ -87,6 +88,28 @@ function getParameters() {
     }
 
     return params;
+}
+
+/**
+ * Draws a single inlay marker of the style provided
+ * @param {Object} paths - The set of paths being built for the neck.
+ * @param {String} style - Either "dots" or "crosshairs".
+ * @param {Number} x_pos - The center x position on the inlay.
+ * @param {Number} y_pos - The center u position on the inlay.
+ * @param {Number} radius - The radius on the inlay.
+ */
+ function drawInlay(paths, style, x_pos, y_pos, radius) {
+
+    if (style == "dots") {
+        var c = new makerjs.paths.Circle([x_pos, y_pos], radius);
+        paths.push(c);
+    }
+    if (style == "crosshairs") {
+        var t = new makerjs.paths.Line([x_pos, y_pos - radius], [x_pos, y_pos + radius])
+        paths.push(t);
+        var b = new makerjs.paths.Line([x_pos - radius, y_pos], [x_pos + radius, y_pos])
+        paths.push(b);
+    }
 }
 
 /**
@@ -146,18 +169,23 @@ function generateFretboard(params) {
         var fretNumber = (i % 12);
         switch (fretNumber) {
 		case 3: case 5: case 7: case 9:
-			var c = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 2.0)],
-				params.inlayWidth / 2.0);
-			paths.push(c);
+			var x_pos = pos - ((positions[i] - positions[i - 1]) / 2.0);
+			var y_pos = y_offset + (height / 2.0);
+			var radius = params.inlayWidth / 2.0;
+
+			drawInlay(paths, params.inlayStyle, x_pos, y_pos, radius);
+
 			break;
 
 		case 0:
-			var c1 = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height / 4.0)],
-				params.inlayWidth / 2.0);
-			paths.push(c1);
-			var c2 = new makerjs.paths.Circle([pos - ((positions[i] - positions[i - 1]) / 2.0), y_offset + (height * 3.0 / 4.0)],
-				params.inlayWidth / 2.0);
-			paths.push(c2);
+			var x_pos = pos - ((positions[i] - positions[i - 1]) / 2.0);
+			var upper_y = y_offset + (height * 3.0 / 4.0);
+			var lower_y = y_offset + (height / 4.0);
+			var radius = params.inlayWidth / 2.0;
+
+			drawInlay(paths, params.inlayStyle, x_pos, upper_y, radius);
+			drawInlay(paths, params.inlayStyle, x_pos, lower_y, radius);
+
 			break;
         }
     }
