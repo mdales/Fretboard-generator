@@ -12,10 +12,14 @@ var makerjs = require('makerjs');
  * @param {number} frets - How many frets to calculate for.
  * @return {[number]} A list of positions in the same units as the scale length was provided.
  */
-function generateFretPositions(scaleLength, frets) {
+function generateFretPositions(scaleLength, frets, bridgeLocation) {
     var positions = [];
     for (i = 0; i <= frets; i++) {
         positions[i] = scaleLength - (scaleLength / Math.pow(2, i / 12));
+    }
+    if (bridgeLocation) {
+        frets = parseInt(frets) + 1;
+        positions[frets] = scaleLength;
     }
     return positions;
 }
@@ -26,7 +30,7 @@ function generateFretPositions(scaleLength, frets) {
  */
 function fillPositionTable(params) {
 
-    var positions = generateFretPositions(params.scaleLength, params.frets);
+    var positions = generateFretPositions(params.scaleLength, params.frets, params.bridgeLocation);
     if (params.positionUnits == "inches") {
     	for (i = 0; i < positions.length; i++) {
     		positions[i] = positions[i] / 25.4;
@@ -72,6 +76,7 @@ function getParameters() {
     	inlayStyle: $("select[name=\"inlay_style\"]").val(),
     	slotStyle: $("select[name=\"slot_style\"]").val(),
     	alignmentMarkers: $("input[name=\"alignment_markers\"]").is(":checked"),
+    	bridgeLocation: $("input[name=\"bridge_location\"]").is(":checked"),
     	orientation: $("select[name=\"orientation\"]").val(),
     	positionUnits: $("select[name=\"position_units\"]").val()
 	};
@@ -86,7 +91,6 @@ function getParameters() {
     if (params.inlayUnits == "inches") {
         params.inlayWidth *= 25.4;
     }
-
     return params;
 }
 
@@ -124,7 +128,7 @@ function generateFretboard(params) {
     const y_offset = 0.0;
     const slotWidth = 0.5;
 
-    var positions = generateFretPositions(params.scaleLength, params.frets);
+    var positions = generateFretPositions(params.scaleLength, params.frets, params.bridgeLocation);
 
 	var paths = [];
 	var models = []
