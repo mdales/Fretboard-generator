@@ -10,6 +10,7 @@ var makerjs = require('makerjs');
  * Calculates the fret positions given a scale length and the number of frets. Includes the zero fret.
  * @param {number} scaleLength - The scale length in whatever units.
  * @param {number} frets - How many frets to calculate for.
+ * @param {bool} bridgeLocation - Whether to add the bridge location to the last position or not.
  * @return {[number]} A list of positions in the same units as the scale length was provided.
  */
 function generateFretPositions(scaleLength, frets, bridgeLocation) {
